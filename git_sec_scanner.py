@@ -4,6 +4,7 @@ import doctest
 import sys
 import os
 
+
 import octohub
 from octohub.connection import Connection
 
@@ -18,17 +19,19 @@ def mfa_checker():
     r = c.send('GET', uri, params={"filter": "2fa-disabled"})
     print "The Following users do not have 2FA NOT ENABLED"
     print ("*" * 25)
+    print "   "
     for user in r.parsed:
         print user.login
         print "   "
-        print "   "
+        
 
 
 def commit_sig_verification():
     uri = "/repos/insaida/core/git/commits/0fd06d9fb279b1fd2daba28accd94b8e73bf5ded"
     r = c.send('GET', uri, data="Verification")
     print r.parsed
-   # for r.parsed:
+    for verification in r.parsed:
+        print verification['verification']
 
 
 def list_Team():
@@ -50,7 +53,7 @@ def create_team():
             ""
         ]
     })
-    if response == '200':
+    if response == '201':
 
         print ('Newly Added Team: ')
         print r.parsed
@@ -65,13 +68,14 @@ def create_team():
 
 def add_to_team():
     uri = "/teams" + team_id + "/members" + team_mates
-    r = c.send('PUT', uri, data={'ContentLength':'0'})
+    r = c.send('PUT', uri)
     yield r.parsed
-    if response == '204':
+    if response == '201':
         print ("Successfully added teammates to new team")
 
 
-# def notify_security_team():
+#def notify_security_team():
+
 
 
 def main():
