@@ -15,6 +15,13 @@ team_mates = []
 
 
 def mfa_checker():
+    """
+    This method checks for users with 2FA not enabled.abs
+    By querying the org members endpoint
+    GET '/orgs/:org/member'
+    using the filter object: "2fa-disabled"
+    """
+    
     uri = "/orgs/" + sys.argv[1] + "/members"
     r = c.send('GET', uri, params={"filter": "2fa-disabled"})
     print "The Following users do not have 2FA NOT ENABLED"
@@ -75,6 +82,10 @@ def add_to_team():
 
 
 #def notify_security_team():
+
+"""
+Check for recently installed webhooks
+"""
 
 
 
