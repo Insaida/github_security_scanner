@@ -10,8 +10,8 @@ from octohub.connection import Connection
 
 token = os.environ.get("GITHUB_ACCESS_TOKEN")
 c = Connection(token)
-team_id = []
-team_mates = []
+team_id = ""
+team_mates = ""
 
 
 def mfa_checker():
@@ -24,21 +24,20 @@ def mfa_checker():
 
     uri = "/orgs/" + sys.argv[1] + "/members"
     r = c.send('GET', uri, params={"filter": "2fa-disabled"})
-    print "The Following users do not have 2FA NOT ENABLED"
+    print ("The Following users do not have 2FA NOT ENABLED")
     print ("*" * 25)
-    print "   "
+    print ("   ")
     for user in r.parsed:
-        print user.login
-        print "   "
-        
+        print (user.login)
+        print ("   ")
 
 
 def commit_sig_verification():
     uri = "/repos/insaida/core/git/commits/0fd06d9fb279b1fd2daba28accd94b8e73bf5ded"
     r = c.send('GET', uri, data="Verification")
-    print r.parsed
-    for verification in r.parsed:
-        print verification['verification']
+    print (r.parsed)
+    # for verification in r.parsed:
+   #     print verification['verification']
 
 
 def list_Team():
@@ -54,19 +53,19 @@ def create_team():
     uri = "/orgs" + sys.argv[1] + "/teams"
     r = c.send('POST', uri, params={
         "name": "Quarantine",
-        "description": "No MFA teammates",
+        "description": "No 2FA teammates",
         "permission": "pull",
         "repo_names": [
             ""
         ]
     })
-    if response == '201':
+    if 'response' == '201':
 
         print ('Newly Added Team: ')
-        print r.parsed
+        print (r.parsed)
         for id in r.parsed:
             team_id = id['id']
-            print team_id
+            print (team_id)
     else:
         log = octohub.response.get_logger()
         list_Team()
@@ -77,16 +76,15 @@ def add_to_team():
     uri = "/teams" + team_id + "/members" + team_mates
     r = c.send('PUT', uri)
     yield r.parsed
-    if response == '201':
+    if 'response' == '201':
         print ("Successfully added teammates to new team")
 
 
-#def notify_security_team():
+# def notify_security_team():
 
 """
 Check for recently installed webhooks
 """
-
 
 
 def main():
